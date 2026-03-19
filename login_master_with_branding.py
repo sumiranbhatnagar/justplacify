@@ -1247,9 +1247,9 @@ def main():
                 <h1 style="font-size: 2.5rem; margin: 0 0 0.5rem 0;">🔐 PLACIFY</h1>
                 <p style="font-size: 1.1rem; margin-bottom: 1rem;">"Hire Talent, Build Futures – One Placement at a Time"</p>
                 <div style="display: flex; justify-content: space-around; margin-top: 1.5rem; font-size: 1.1rem;">
-                    <div>✅ 500+ Agencies</div>
-                    <div>💼 50K+ Companies</div>
-                    <div>👨‍💼 1M+ Applicants</div>
+                    <div>✅ Number of Agencies</div>
+                    <div>💼 Number of  Companies</div>
+                    <div>👨‍💼 Number of  Applicants</div>
                 </div>
             </div>
             """, unsafe_allow_html=True)
