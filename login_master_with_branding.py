@@ -1277,8 +1277,7 @@ def main():
                         key="card_login",
                         use_container_width=True
                     ):
-                        st.session_state.page = "accept_tc"
-                        st.session_state.tc_flow = "login"
+                        st.session_state.page = "login"
 
                         st.rerun()
                 
