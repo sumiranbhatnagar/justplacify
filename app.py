@@ -146,6 +146,10 @@ def apply_custom_sidebar_css():
         background: linear-gradient(to right, transparent, #444444, transparent) !important;
         margin: 8px 0 !important;
     }
+    [data-testid="collapsedControl"] {
+    top: 80px !important;
+    position: fixed !important;
+}
     </style>
     """
     st.markdown(css, unsafe_allow_html=True)
