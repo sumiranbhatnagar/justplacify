@@ -68,7 +68,7 @@ header[data-testid="stHeader"] {
     margin-right: auto;
 }
 [data-testid="collapsedControl"] {
-    top: 80px !important;
+    top: 180px !important;
     position: fixed !important;
 }
 
