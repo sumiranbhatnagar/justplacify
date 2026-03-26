@@ -22,6 +22,15 @@ warnings.filterwarnings('ignore')
 import secrets
 import string
 import hashlib
+import urllib.request
+def check_internet():
+    """Check if internet is available"""
+    try:
+        urllib.request.urlopen('https://www.google.com', timeout=3)
+        return True
+    except:
+        return False
+
 # from agency_managment import admin_agency_management, agency_user_management, get_all_agencies
 from openpyxl.utils import get_column_letter
 
@@ -2992,7 +3001,17 @@ def render_settings():
 # ==================================================== 
 # MAIN
 # ==================================================== 
-def main():
+def main():# ✅ Internet check - SABSE PEHLE
+    if not check_internet():
+        st.error("🌐 No Internet Connection!")
+        st.warning(
+            "⚠️ **Internet unavailable!**\n\n"
+            "Yeh app Google Sheets se connect hoti hai.\n\n"
+            "Kripya apna internet connection check karein aur page refresh karein."
+        )
+        st.info("💡 **Tip:** Ctrl+R ya F5 dabao refresh karne ke liye")
+        st.stop()  # ← Baaki app nahi chalegi
+    
     if not st.session_state.get("logged_in", False):
         from login_master_with_branding import main as login_main
         login_main()
