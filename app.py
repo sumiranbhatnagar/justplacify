@@ -498,14 +498,14 @@ def admin_dashboard():
             available_cols = [c for c in display_cols if c in interviews_df.columns]
             render_enhanced_dataframe(interviews_df[available_cols].head(5))
         else:
-            render_empty_state("No interviews yet", icon="📋")
+            render_empty_state(icon="📋", title="No interviews yet")
     
     with col2:
         st.markdown("### 📊 Interview Status")
         if len(interviews_df) > 0 and 'Interview Status' in interviews_df.columns:
             st.bar_chart(interviews_df['Interview Status'].value_counts())
         else:
-            render_empty_state("No data available", icon="📊")
+            render_empty_state(icon="📊", title="No data available")
 
 # ==================================================== 
 # COMPANY MANAGEMENT
