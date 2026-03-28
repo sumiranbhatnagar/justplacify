@@ -75,7 +75,7 @@ def get_job_titles():
                 logger.debug("Job titles fetched successfully.")
                 return sorted(df["Designation"].dropna().unique().tolist())
     except Exception as e:
-        logger.error(f"Error fetching job titles: {e}")
+        st.error(f"❌ Job titles error: {e}")
     return []
 
 def generate_candidate_id():
