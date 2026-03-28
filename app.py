@@ -1126,6 +1126,7 @@ def admin_vacancy_mgmt():
                         return
                     
                     # ========== FIXED ROW DETECTION ==========
+                    SHEET_ID = get_agency_sheet_id()
                     sheet = client.open_by_key(SHEET_ID).worksheet("Sheet4")
                     all_data = sheet.get_all_values()
                     
@@ -1301,7 +1302,7 @@ def admin_vacancy_mgmt():
                         if not client:
                             st.error("❌ Cannot connect to Google Sheets")
                             return
-                        
+                        SHEET_ID = get_agency_sheet_id()
                         sheet = client.open_by_key(SHEET_ID).worksheet("Sheet4")
                         all_data = sheet.get_all_values()
                         
