@@ -714,142 +714,142 @@ def get_designations():
 
 # ====================================================
 # COMMON HELPERS FOR VACANCIES
-# ====================================================
-def _norm(s: str) -> str:
-    return str(s).strip().lower().replace("_", " ").replace("-", " ")
+# # ====================================================
+# def _norm(s: str) -> str:
+#     return str(s).strip().lower().replace("_", " ").replace("-", " ")
 
 
-def normalize_series(vals):
-    return sorted({str(x).strip() for x in vals if str(x).strip()})
+# def normalize_series(vals):
+#     return sorted({str(x).strip() for x in vals if str(x).strip()})
 
 
-@st.cache_data(ttl=300)
-def get_company_name_options():
-    df = get_companies()
-    pick = (
-        "Company Name"
-        if "Company Name" in df.columns
-        else ("Company_Name" if "Company_Name" in df.columns else None)
-    )
-    return normalize_series(df[pick].dropna().tolist()) if pick else []
+# @st.cache_data(ttl=300)
+# def get_company_name_options():
+#     df = get_companies()
+#     pick = (
+#         "Company Name"
+#         if "Company Name" in df.columns
+#         else ("Company_Name" if "Company_Name" in df.columns else None)
+#     )
+#     return normalize_series(df[pick].dropna().tolist()) if pick else []
 
 
-@st.cache_data(ttl=300)
-def get_designation_options():
-    """Fetch designations from Sheet2"""
-    client = get_google_sheets_client()
-    if not client:
-        return []
-    try:
-        ws = client.open_by_key(SHEET_ID).worksheet("Sheet2")
-        rows = ws.get_all_records()
-        df = pd.DataFrame(rows)
-        return (
-            normalize_series(df["Designation"].dropna().tolist())
-            if "Designation" in df.columns
-            else []
-        )
-    except Exception:
-        return []
+# @st.cache_data(ttl=300)
+# def get_designation_options():
+#     """Fetch designations from Sheet2"""
+#     client = get_google_sheets_client()
+#     if not client:
+#         return []
+#     try:
+#         ws = client.open_by_key(SHEET_ID).worksheet("Sheet2")
+#         rows = ws.get_all_records()
+#         df = pd.DataFrame(rows)
+#         return (
+#             normalize_series(df["Designation"].dropna().tolist())
+#             if "Designation" in df.columns
+#             else []
+#         )
+#     except Exception:
+#         return []
 
 
-@st.cache_data(ttl=300)
-def get_sheet2_df():
-    """Get full Sheet2 dataframe for DGN ID lookup"""
-    try:
-        client = get_google_sheets_client()
-        if not client:
-            return pd.DataFrame()
-        ws = client.open_by_key(SHEET_ID).worksheet("Sheet2")
-        rows = ws.get_all_records()
-        return pd.DataFrame(rows)
-    except Exception:
-        return pd.DataFrame()
+# @st.cache_data(ttl=300)
+# def get_sheet2_df():
+#     """Get full Sheet2 dataframe for DGN ID lookup"""
+#     try:
+#         client = get_google_sheets_client()
+#         if not client:
+#             return pd.DataFrame()
+#         ws = client.open_by_key(SHEET_ID).worksheet("Sheet2")
+#         rows = ws.get_all_records()
+#         return pd.DataFrame(rows)
+#     except Exception:
+#         return pd.DataFrame()
 
 
-def lookup_cid(company_name: str) -> str:
-    """Lookup CID from company name"""
-    df = get_companies()
-    if df.empty:
-        return ""
-    name_col = (
-        "Company Name"
-        if "Company Name" in df.columns
-        else ("Company_Name" if "Company_Name" in df.columns else None)
-    )
-    if not name_col or "CID" not in df.columns:
-        return ""
-    key = str(company_name).strip().lower()
-    hit = df[df[name_col].astype(str).str.strip().str.lower() == key]
-    return str(hit.iloc[0]["CID"]) if not hit.empty and "CID" in hit.columns else ""
+# def lookup_cid(company_name: str) -> str:
+#     """Lookup CID from company name"""
+#     df = get_companies()
+#     if df.empty:
+#         return ""
+#     name_col = (
+#         "Company Name"
+#         if "Company Name" in df.columns
+#         else ("Company_Name" if "Company_Name" in df.columns else None)
+#     )
+#     if not name_col or "CID" not in df.columns:
+#         return ""
+#     key = str(company_name).strip().lower()
+#     hit = df[df[name_col].astype(str).str.strip().str.lower() == key]
+#     return str(hit.iloc[0]["CID"]) if not hit.empty and "CID" in hit.columns else ""
 
 
-def lookup_dgn_id(job_title: str) -> str:
-    """Lookup DGN ID from job title (designation) in Sheet2"""
-    df2 = get_sheet2_df()
-    if df2.empty:
-        return ""
-    des_col = "Designation" if "Designation" in df2.columns else None
-    dgn_col = (
-        "DGN ID"
-        if "DGN ID" in df2.columns
-        else ("DGN_ID" if "DGN_ID" in df2.columns else None)
-    )
-    if not des_col or not dgn_col:
-        return ""
-    key = str(job_title).strip().lower()
-    hit = df2[df2[des_col].astype(str).str.strip().str.lower() == key]
-    return str(hit.iloc[0][dgn_col]) if not hit.empty else ""
+# def lookup_dgn_id(job_title: str) -> str:
+#     """Lookup DGN ID from job title (designation) in Sheet2"""
+#     df2 = get_sheet2_df()
+#     if df2.empty:
+#         return ""
+#     des_col = "Designation" if "Designation" in df2.columns else None
+#     dgn_col = (
+#         "DGN ID"
+#         if "DGN ID" in df2.columns
+#         else ("DGN_ID" if "DGN_ID" in df2.columns else None)
+#     )
+#     if not des_col or not dgn_col:
+#         return ""
+#     key = str(job_title).strip().lower()
+#     hit = df2[df2[des_col].astype(str).str.strip().str.lower() == key]
+#     return str(hit.iloc[0][dgn_col]) if not hit.empty else ""
 
 
-@st.cache_data(ttl=300)
-def get_education_options():
-    """
-    Priority:
-    1) Sheet title case-insensitive: 'education' → column 'Academic Education'
-    2) Fallback: 'Sheet4' → column 'Education Required'
-    3) Final defaults list
-    """
-    try:
-        client = get_google_sheets_client()
-        if not client:
-            return ["12th", "Diploma", "B.Sc", "B.Tech", "M.Sc", "MBA"]
+# @st.cache_data(ttl=300)
+# def get_education_options():
+#     """
+#     Priority:
+#     1) Sheet title case-insensitive: 'education' → column 'Academic Education'
+#     2) Fallback: 'Sheet4' → column 'Education Required'
+#     3) Final defaults list
+#     """
+#     try:
+#         client = get_google_sheets_client()
+#         if not client:
+#             return ["12th", "Diploma", "B.Sc", "B.Tech", "M.Sc", "MBA"]
 
-        ss = client.open_by_key(SHEET_ID)
-        titles = [ws.title for ws in ss.worksheets()]
-        edu_title = next(
-            (t for t in titles if t.strip().lower() == "education"), None
-        )
+#         ss = client.open_by_key(SHEET_ID)
+#         titles = [ws.title for ws in ss.worksheets()]
+#         edu_title = next(
+#             (t for t in titles if t.strip().lower() == "education"), None
+#         )
 
-        if edu_title:
-            try:
-                ws = ss.worksheet(edu_title)
-                rows = ws.get_all_records()
-                if rows:
-                    df = pd.DataFrame(rows)
-                    if "Academic Education" in df.columns:
-                        return normalize_series(
-                            df["Academic Education"].dropna().tolist()
-                        )
-            except:
-                pass
+#         if edu_title:
+#             try:
+#                 ws = ss.worksheet(edu_title)
+#                 rows = ws.get_all_records()
+#                 if rows:
+#                     df = pd.DataFrame(rows)
+#                     if "Academic Education" in df.columns:
+#                         return normalize_series(
+#                             df["Academic Education"].dropna().tolist()
+#                         )
+#             except:
+#                 pass
 
-        if "Sheet4" in titles:
-            try:
-                ws4 = ss.worksheet("Sheet4")
-                rows4 = ws4.get_all_records()
-                if rows4:
-                    df4 = pd.DataFrame(rows4)
-                    if "Education Required" in df4.columns:
-                        return normalize_series(
-                            df4["Education Required"].dropna().tolist()
-                        )
-            except:
-                pass
+#         if "Sheet4" in titles:
+#             try:
+#                 ws4 = ss.worksheet("Sheet4")
+#                 rows4 = ws4.get_all_records()
+#                 if rows4:
+#                     df4 = pd.DataFrame(rows4)
+#                     if "Education Required" in df4.columns:
+#                         return normalize_series(
+#                             df4["Education Required"].dropna().tolist()
+#                         )
+#             except:
+#                 pass
 
-        return ["12th", "Diploma", "B.Sc", "B.Tech", "M.Sc", "MBA"]
-    except Exception:
-        return ["12th", "Diploma", "B.Sc", "B.Tech", "M.Sc", "MBA"]
+#         return ["12th", "Diploma", "B.Sc", "B.Tech", "M.Sc", "MBA"]
+#     except Exception:
+#         return ["12th", "Diploma", "B.Sc", "B.Tech", "M.Sc", "MBA"]
 
 
 # ====================================================
