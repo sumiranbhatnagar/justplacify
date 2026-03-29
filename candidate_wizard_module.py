@@ -44,22 +44,25 @@ def get_sheet_id():
         st.stop()
 
 
-CRED_FILE = "credentials.json"
+
+CRED_FILE = "credentials.json" if os.path.exists("credentials.json") else None
 
 @st.cache_resource
 def get_google_sheets_client():
-    logger.debug("Initializing Google Sheets client in candidate_wizard_module.")
     try:
-        logger.debug(f"Using credentials file: {CRED_FILE}")
         scope = ['https://spreadsheets.google.com/feeds',
                  'https://www.googleapis.com/auth/drive']
-        credentials = ServiceAccountCredentials.from_json_keyfile_name(CRED_FILE, scope)
+        if CRED_FILE:
+            credentials = ServiceAccountCredentials.from_json_keyfile_name(CRED_FILE, scope)
+        else:
+            credentials = ServiceAccountCredentials.from_json_keyfile_dict(
+                st.secrets["gcp_service_account"], scope
+            )
         client = gspread.authorize(credentials)
         return client
     except Exception as e:
-        logger.error(f"Error initializing Google Sheets client in candidate_wizard_module: {e}")
+        st.error(f"❌ Sheets error: {e}")
         return None
-
 # =======================================================
 # HELPER FUNCTIONS FOR G-SHEETS
 # =======================================================
