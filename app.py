@@ -311,7 +311,7 @@ def render_sidebar():
 # ==================================================== 
 # GOOGLE SHEETS
 # ==================================================== 
-SHEET_ID = "1rpuXdpfwjy0BQcaZcn0Acbh-Se6L3PvyNGiNu4NLcPA"
+#SHEET_ID = "1rpuXdpfwjy0BQcaZcn0Acbh-Se6L3PvyNGiNu4NLcPA"
 
 if os.path.exists("credentials.json"):
     CRED_FILE = "credentials.json"
