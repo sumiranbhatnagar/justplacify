@@ -15,7 +15,7 @@ from terms_conditions_module import (
     get_latest_tc_pdf,
     save_tc_acceptance
 )
-
+import os
 
 def generate_password(length=8):
     """Auto generate random password"""
