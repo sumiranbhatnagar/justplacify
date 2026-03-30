@@ -54,10 +54,11 @@ st.set_page_config(
 st.markdown("""
 <style>
 header[data-testid="stHeader"] {
-    height: 0px !important;
-    min-height: 0px !important;
+    height: 2.5rem !important;
+    min-height: 2.5rem !important;
     padding: 0 !important;
-}
+    background: transparent !important;
+    box-shadow: none !important;}
 
             
 .main .block-container {
