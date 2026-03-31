@@ -191,7 +191,7 @@ def logout():
     """
     Logout function with confirmation
     """
-    import streamlit as st
+    st.cache_data.clear()
     
     # Clear all session state
     for key in list(st.session_state.keys()):
